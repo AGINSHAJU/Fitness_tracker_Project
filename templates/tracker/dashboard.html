@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Tracker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
+                        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')
+                        no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Inter', sans-serif;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6EE7B7, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .dumbbell-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: rotate 2s linear infinite;
+        }
+        .dumbbell-loader::before,
+        .dumbbell-loader::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #6EE7B7;
+            border-radius: 50%;
+            top: 0;
+            animation: bounce 1s infinite ease-in-out;
+        }
+        .dumbbell-loader::before {
+            left: 0;
+        }
+        .dumbbell-loader::after {
+            right: 0;
+            animation-delay: -0.5s;
+        }
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-100">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="dumbbell-loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="glassmorphism p-4 shadow-lg">
+        <div class="max-w-screen-xl mx-auto flex items-center justify-between">
+            <a href="{% url 'front_page' %}" class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.784a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.69-.398-1.563-.398-2.654a1 1 0 00-1-1H7.5a1 1 0 00-1 .8 10.500 10.500 0 01-.793 3.964 6.295 6.295 0 01-1.086-3.144 1 1 0 00-1-1H2a1 1 0 00-1 1c0 5.523 4.477 10 10 10s10-4.477 10-10a1 1 0 00-1-1h-3.5a1 1 0 00-.998 1.142 6.306 6.306 0 01-1.081-3.844 1 1 0 00-1-1h-3.023z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-2xl font-bold gradient-text">Carbon Tracker</span>
+            </a>
+            <div class="flex space-x-4">
+                <a href="{% url 'fitness_dashboard' %}" class="text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition duration-300">Fitness Dashboard</a>
+                <a href="{% url 'add_entry' %}" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition duration-300">Add Entry</a>
+                <a href="{% url 'account_logout' %}" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition duration-300">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="glassmorphism p-6 hover-scale">
+                <h2 class="text-2xl font-bold gradient-text mb-4">Welcome, {{ user.username }}!</h2>
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-200 mb-2">Your Points: {{ points }}</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-3">
+                        <div class="bg-green-500 h-3 rounded-full" style="width: {{ points|floatformat:0 }}%"></div>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">{{ points }} / 100</p>
+                </div>
+                <div class="mt-4">
+                    <span class="font-medium text-gray-200">Badges:</span>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        {% for badge in badges %}
+                            <span class="bg-green-500/20 text-green-500 text-xs font-medium px-2.5 py-0.5 rounded">
+                                {{ badge }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-center">
+                <a href="{% url 'add_entry' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition duration-300 hover-scale">
+                    Add New Entry
+                </a>
+            </div>
+        </div>
+
+        <!-- Carbon Footprint Chart -->
+        <div class="glassmorphism p-6 mb-8 hover-scale">
+            <h2 class="text-2xl font-bold gradient-text mb-4">Your Carbon Footprint</h2>
+            {{ chart|safe }}
+        </div>
+
+        <!-- Travel Map -->
+        <div class="glassmorphism p-6 mb-8 hover-scale">
+            <h2 class="text-2xl font-bold gradient-text mb-4">Your Travel Map</h2>
+            <div id="map" class="h-96 rounded-lg overflow-hidden"></div>
+        </div>
+
+        <!-- AI Recommendation -->
+        <div class="glassmorphism p-6 mb-8 hover-scale">
+            <h3 class="text-xl font-semibold gradient-text mb-4">AI Recommendation</h3>
+            <p class="text-gray-300 italic">{{ recommendation }}</p>
+        </div>
+
+        <!-- Recent Entries -->
+        <div class="glassmorphism p-6 hover-scale">
+            <h3 class="text-2xl font-bold gradient-text mb-4">Recent Entries</h3>
+            <ul class="divide-y divide-gray-700">
+                {% for entry in entries %}
+                    <li class="py-4 flex justify-between items-center">
+                        <span class="text-gray-200">{{ entry.date }}: {{ entry.co2_emitted }} kg CO2</span>
+                        <span class="bg-green-500/20 text-green-500 text-xs font-medium px-2.5 py-0.5 rounded">Tracked</span>
+                    </li>
+                {% empty %}
+                    <li class="text-gray-400 italic">No entries yet. Start tracking!</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glassmorphism mt-8 py-6">
+        <div class="max-w-screen-xl mx-auto px-4 text-center">
+            <p class="text-sm text-gray-300 mb-4">
+                © 2024 Carbon Tracker. Helping you reduce your carbon footprint.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="text-gray-300 hover:text-green-400 transition">
+                    <i class="fab fa-facebook text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-green-400 transition">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-green-400 transition">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" async defer></script>
+    <script>
+        // Hide loading screen when page is fully loaded
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500); // Match the transition duration
+        });
+
+        function initMap() {
+            var defaultCenter = {lat: 51.505, lng: -0.09};  // London as fallback
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: defaultCenter
+            });
+            var travelLocations = {{ travel_locations|safe }};
+            if (travelLocations && travelLocations.length > 0) {
+                map.setCenter(travelLocations[0].start);
+                travelLocations.forEach(function(location) {
+                    if (location.start && location.end) {
+                        new google.maps.Marker({
+                            position: location.start,
+                            map: map,
+                            title: "Start: " + location.co2 + " kg CO2"
+                        });
+                        new google.maps.Marker({
+                            position: location.end,
+                            map: map,
+                            title: "End: " + location.co2 + " kg CO2"
+                        });
+                        var path = [location.start, location.end];
+                        new google.maps.Polyline({
+                            path: path,
+                            geodesic: true,
+                            strokeColor: '#6EE7B7',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2,
+                            map: map
+                        });
+                    }
+                });
+            } else {
+                new google.maps.Marker({
+                    position: defaultCenter,
+                    map: map,
+                    title: "No travel data yet"
+                });
+            }
+        }
+    </script>
+</body>
+</html>

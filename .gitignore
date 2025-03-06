@@ -1,0 +1,58 @@
+# Ignore IDE or Editor Specific Files
+.idea/          # IntelliJ
+.vscode/        # Visual Studio Code
+*.suo           # Visual Studio
+*.ntvs*         # Visual Studio
+*.njsproj       # Visual Studio
+*.sln           # Visual Studio
+*.sw?           # Editor swap files
+
+# Ignore Operating System Files
+.DS_Store       # macOS
+Thumbs.db       # Windows
+
+# Ignore Logs and Databases
+*.log           # Log files
+*.sql           # SQL dumps
+*.sqlite        # SQLite databases
+
+# Ignore Dependencies (uncomment based on your project)
+# node_modules/  # For Node.js projects
+# vendor/        # For PHP projects
+# target/        # For Java/Maven projects
+
+# Ignore Build Outputs
+build/          # Build artifacts
+dist/           # Distribution folders
+out/            # Output directories
+
+# Ignore Environment Files (contains sensitive information)
+.env            # Environment variables
+.env.local      # Local environment files
+.env.*.local    # Other local environment files
+
+# Ignore Temporary Files
+*.tmp           # Temporary files
+*.swp           # Swap files (Vim)
+*.swo           # Swap files (Vim)
+
+# Ignore Personal or Local Configuration Files
+local.properties # Local properties (e.g., Android)
+config.json      # Custom config files
+
+# Ignore macOS Specific Files
+*.DS_Store       # macOS Finder files
+.AppleDouble     # macOS resource forks
+.LSOverride      # macOS overrides
+
+# Ignore Windows Specific Files
+Thumbs.db        # Windows thumbnail cache
+ehthumbs.db      # Windows media thumbnail cache
+Desktop.ini      # Windows desktop settings
+
+# Ignore Linux Specific Files
+*~               # Backup files (e.g., Emacs)
+
+# Ignore Python Bytecode (if applicable)
+__pycache__/     # Python compiled files
+*.py[cod]        # Python bytecode

@@ -1,0 +1,175 @@
+{% load static widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') 
+                        no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Fire over Dumbbell Loading Animation */
+        .loading-container {
+            position: relative;
+            width: 120px;
+            height: 80px;
+        }
+        .dumbbell-bar {
+            width: 100px;
+            height: 10px;
+            background: #4B5563;
+            border-radius: 5px;
+            position: absolute;
+            top: 35px;
+            left: 10px;
+        }
+        .dumbbell-weight {
+            width: 20px;
+            height: 20px;
+            background: #6B7280;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+        }
+        .dumbbell-weight.left {
+            left: 0;
+        }
+        .dumbbell-weight.right {
+            right: 0;
+        }
+        .fire {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(to top, #EF4444, #F59E0B);
+            border-radius: 50% 50% 0 0;
+            top: 10px;
+            left: 10px;
+            animation: fireRun 1.5s linear infinite;
+            filter: blur(2px);
+        }
+        @keyframes fireRun {
+            0% { left: 10px; transform: scale(1); }
+            50% { left: 90px; transform: scale(1.2); }
+            100% { left: 10px; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Fire over Dumbbell Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="flex flex-col items-center gap-6">
+            <div class="loading-container">
+                <div class="dumbbell-bar"></div>
+                <div class="dumbbell-weight left"></div>
+                <div class="dumbbell-weight right"></div>
+                <div class="fire"></div>
+            </div>
+            <div class="flex flex-col items-center">
+                <p class="text-white text-xl font-semibold">Igniting Your Fitness Goals</p>
+                <p class="text-gray-400 text-sm mt-2">Heating up your stats...</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bg-gray-900 border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="{% url 'front_page' %}" class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-8a1 1 0 112 0v4a1 1 0 11-2 0V8z" />
+                </svg>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Fitness Tracker</span>
+            </a>
+            <div class="flex md:order-2 space-x-3">
+                <a href="{% url 'dashboard' %}" class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg text-sm px-4 py-2">Carbon Dashboard</a>
+                <a href="{% url 'fitness_add_entry' %}" class="text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm px-4 py-2">Add Fitness Entry</a>
+                <a href="{% url 'aboutus' %}" class="text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm px-4 py-2">About Us</a>
+                <a href="{% url 'account_logout' %}" class="text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-4 py-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-4xl space-y-8 bg-white/90 rounded-xl shadow-2xl p-8">
+            <h1 class="text-4xl font-bold text-center text-gray-900">Welcome, {{ user.username }}!</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-800">Your Points: {{ points }}</h3>
+                    <p class="mt-2">Badges: <span class="text-green-600 font-medium">{{ badges|join:", " }}</span></p>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-800">Health Status</h3>
+                    <p class="mt-2 text-lg font-semibold 
+                        {% if 'Healthy' in health_status %} text-green-600 
+                        {% elif 'Underweight' in health_status %} text-blue-600 
+                        {% elif 'Overweight' in health_status %} text-yellow-600 
+                        {% elif 'Obese' in health_status %} text-red-600 
+                        {% else %} text-gray-600 {% endif %}">
+                        {{ health_status }}
+                    </p>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Your Weight Trend</h2>
+            <div class="bg-gray-100 p-4 rounded-lg">
+                {{ chart|safe }}
+                <p class="mt-2 text-sm text-gray-600 italic">
+                    This chart shows your <span class="font-semibold text-blue-600">weight (kg)</span> over time. 
+                    <span class="font-semibold text-gray-800">Dates</span> are on the bottom (X-axis), and 
+                    <span class="font-semibold text-blue-600">weight</span> is on the side (Y-axis). 
+                    Hover over points to see exact values!
+                </p>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Recent Fitness Entries</h2>
+            <ul class="space-y-4">
+                {% for entry in entries %}
+                    <li class="bg-gray-100 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <span class="font-medium">{{ entry.date }}</span>: 
+                            Weight: <span class="text-blue-600">{{ entry.weight }} kg</span>, 
+                            Waist: <span class="text-blue-600">{{ entry.waist_size }} cm</span>, 
+                            Exercise: <span class="text-blue-600">{{ entry.exercise_minutes }} min</span>, 
+                            Calories: <span class="text-blue-600">{{ entry.calories }} kcal</span>
+                        </div>
+                        <div>
+                            <span class="text-lg font-bold px-3 py-1 rounded-full bg-purple-100 text-purple-800">
+                                BMI: {{ entry.bmi|floatformat:1 }}
+                            </span>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="text-gray-600 p-4 bg-gray-100 rounded-lg">No fitness entries yet. Start tracking at "Add Fitness Entry"!</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <footer class="bg-gray-900 text-white py-6">
+        <div class="max-w-screen-xl mx-auto px-4 text-center">
+            <p class="text-sm">© 2024 Fitness Tracker. Your health, your journey.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        // Hide the loading screen after page load with a smooth transition
+        window.onload = function() {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById("loadingScreen");
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = "0";
+                    setTimeout(() => {
+                        loadingScreen.style.display = "none";
+                    }, 300); // Matches transition duration
+                }
+            }, 1000); // Minimum display time of 1 second
+        };
+    </script>
+</body>
+</html>

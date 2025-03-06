@@ -1,0 +1,115 @@
+{% load static widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Carbon Entry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') 
+                        no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-gray-900 border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.784a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.69-.398-1.563-.398-2.654a1 1 0 00-1-1H7.5a1 1 0 00-1 .8 10.500 10.500 0 01-.793 3.964 6.295 6.295 0 01-1.086-3.144 1 1 0 00-1-1H2a1 1 0 00-1 1c0 5.523 4.477 10 10 10s10-4.477 10-10a1 1 0 00-1-1h-3.5a1 1 0 00-.998 1.142 6.306 6.306 0 01-1.081-3.844 1 1 0 00-1-1h-3.023z" clip-rule="evenodd" />
+                </svg>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Carbon Tracker</span>
+            </a>
+            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <a href="{% url 'dashboard' %}" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                    My Profile
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md space-y-8 bg-white/90 rounded-xl shadow-2xl p-8">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+                    Add New Carbon Entry
+                </h2>
+            </div>
+            <form method="post" class="mt-8 space-y-6">
+                {% csrf_token %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_travel_km" class="block text-sm font-medium text-gray-700">Travel (km)</label>
+                        {% render_field form.travel_km class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_energy_kwh" class="block text-sm font-medium text-gray-700">Energy (kWh)</label>
+                        {% render_field form.energy_kwh class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_beef_meals" class="block text-sm font-medium text-gray-700">Beef Meals</label>
+                        {% render_field form.beef_meals class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_chicken_meals" class="block text-sm font-medium text-gray-700">Chicken Meals</label>
+                        {% render_field form.chicken_meals class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_veg_meals" class="block text-sm font-medium text-gray-700">Vegetarian Meals</label>
+                        {% render_field form.veg_meals class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_start_lat" class="block text-sm font-medium text-gray-700">Start Latitude</label>
+                        {% render_field form.start_lat class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_start_lng" class="block text-sm font-medium text-gray-700">Start Longitude</label>
+                        {% render_field form.start_lng class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_end_lat" class="block text-sm font-medium text-gray-700">End Latitude</label>
+                        {% render_field form.end_lat class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                    <div>
+                        <label for="id_end_lng" class="block text-sm font-medium text-gray-700">End Longitude</label>
+                        {% render_field form.end_lng class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" %}
+                    </div>
+                </div>
+                
+                <div class="flex justify-between space-x-4">
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105">
+                        Save Entry
+                    </button>
+                    <a href="{% url 'dashboard' %}" class="w-full text-center bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-6">
+        <div class="max-w-screen-xl mx-auto px-4 text-center">
+            <p class="text-sm">
+                © 2024 Carbon Tracker. Helping you reduce your carbon footprint.
+                <a href="#" class="text-green-400 hover:underline ml-2">Privacy Policy</a>
+                <a href="#" class="text-green-400 hover:underline ml-2">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+</body>
+</html>
